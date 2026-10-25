@@ -1,16 +1,14 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="origin"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="strict-origin-when-cross-origin"><link rel="icon" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#1E5AA0"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Nocleg-Finder Montage</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: one narrow work column — form "Auftrag" card on top, results grouped by kind of stay below, host-message at the end */
 :root{
   --bg:#EEF1F4; --panel:#FFFFFF; --ink:#16202A; --muted:#5A6774; --line:#D5DCE3;
   --accent:#1E5AA0; --accent-ink:#FFFFFF; --amber:#B9770E; --amber-bg:#FBF1DE; --ok:#2E7D4F; --ok-bg:#E4F3EA;
-  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-display:"Bahnschrift SemiBold Condensed","Bahnschrift Condensed","Bahnschrift","Arial Narrow",Arial,sans-serif;
+  --f-body:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  --f-mono:Consolas,"Cascadia Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#94A2B0; --line:#2B3744;
@@ -81,10 +79,13 @@ details .grid{margin-top:10px}
 .warn{background:var(--amber-bg);border-radius:8px;padding:12px 14px;font-size:.88rem;color:var(--ink);border-left:4px solid var(--amber)}
 textarea{min-height:190px;font:400 .92rem/1.55 var(--f-body);resize:vertical}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;max-width:calc(100% - 32px);z-index:20}
+.legal{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:var(--muted);max-width:65ch}
+.legal h3{font:600 .75rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+.legal p{margin:0 0 6px}
 .actions{display:flex;flex-wrap:wrap;gap:10px}
 @media (prefers-reduced-motion:no-preference){.portal{transition:border-color .15s}}
 </style>
-<link rel="icon" href="icon.png"></head><body>
+</head><body>
 
 <div class="wrap">
   <header>
@@ -173,6 +174,8 @@ textarea{min-height:190px;font:400 .92rem/1.55 var(--f-body);resize:vertical}
     <div class="actions"><button class="btn ghost" type="button" id="copy-msg" data-t="copy"></button></div>
     <div class="warn" data-t="busWarn"></div>
   </section>
+
+  <footer class="legal"><h3 data-t="legalHead"></h3><p data-t="legal1"></p><p data-t="legal2"></p><p data-t="legal3"></p></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -193,9 +196,9 @@ const T={
  copied:"Adres skopiowany – wklej go na stronie",copiedMsg:"Wiadomość skopiowana",copyFail:"Nie udało się skopiować – zaznacz tekst ręcznie",
  msgHead:"Zapytanie do gospodarza",msgHint:"Gotowa wiadomość po niemiecku – wyślij przez portal przed rezerwacją.",company:"Firma (na fakturę)",copy:"Kopiuj wiadomość",
  busWarn:"Filtr „parking” na portalach nie gwarantuje miejsca dla busa. Przed rezerwacją zawsze potwierdź to u gospodarza.",
- err:"Uzupełnij adres i daty (wyjazd po przyjeździe).",
+ legalHead:"Prywatność i zasady",legal1:"Appka nie ma serwera i nie zapisuje żadnych danych poza Twoją przeglądarką (ostatnie ustawienia). Nie używa cookies ani analityki.",legal2:"Do ustalenia lokalizacji adres budowy jest wysyłany do OpenStreetMap (Nominatim), raz na wyszukiwanie, wynik zapamiętywany lokalnie. Adres budowy nie powinien zawierać danych osobowych.",legal3:"Appka nie pobiera ofert z portali. Tworzy tylko linki do ich publicznych wyszukiwarek. Rezerwacja odbywa się na stronie portalu, na jego zasadach.",err:"Uzupełnij adres i daty (wyjazd po przyjeździe).",
  n_booking_a:"Całe mieszkania i domy, kuchnia, parking, sortowanie od budowy",n_booking_h:"Pokój dla każdego, parking, sortowanie od budowy",n_airbnb:"Cały obiekt, sypialnie, łazienki, kuchnia, parking, promień",
- n_vrbo:"Miejsce, daty, osoby – sypialnie sprawdź na stronie",n_holidu:"Porównuje wiele portali – sprawdź filtry",n_h2g:"Porównywarka – ustaw daty i osoby",n_fewo:"Duży niemiecki portal FeWo",
+ n_vrbo:"Miejsce, daty, osoby – sypialnie sprawdź na stronie",n_holidu:"Porównuje wiele portali – sprawdź filtry",n_h2g:"Porównywarka, miejscowość ustawiona – dodaj daty i osoby",n_fewo:"Duży niemiecki portal FeWo",
  n_hrs:"Hotele dla firm, faktury na firmę",n_gmap_f:"Mapa: Ferienwohnungen wokół budowy",n_gmap_h:"Mapa: hotele i Gasthöfe wokół budowy",n_gmap_p:"Mapa: Pensionen i Gästezimmer",n_tour:"Strony turystyczne gminy/regionu",
  n_mz:"Największy portal dla ekip",n_mmz:"Kwatery dla monterów",n_mzg:"Tanie kwatery dla ekip"},
  de:{sub:"Unterkünfte für Montageteams – nah an der Baustelle",order:"Montageeinsatz",addr:"Adresse der Baustelle",from:"Anreise",to:"Abreise",workers:"Mitarbeiter",bedrooms:"Schlafzimmer min.",baths:"Bäder min.",radius:"Umkreis um die Baustelle",budget:"Budget pro Nacht und Monteur",budgetUnit:"€ / Nacht / Person",bcalc:(pn,tot,n)=>`Team: <b>${pn} €</b> pro Nacht · gesamt: <b>${tot} €</b> (${n})`,budgetNote:"Preisgrenze gesetzt",needs:"Anforderungen",kitchen:"Küche",parking:"Parkplatz",bus:"Platz für Transporter",trailer:"Mit Anhänger",singlebeds:"Getrennte Betten",kinds:"Art der Unterkunft",
@@ -211,9 +214,9 @@ const T={
  copied:"Adresse kopiert – auf der Seite einfügen",copiedMsg:"Nachricht kopiert",copyFail:"Kopieren nicht möglich – Text bitte von Hand markieren",
  msgHead:"Anfrage an den Vermieter",msgHint:"Fertige Nachricht – vor der Buchung über das Portal senden.",company:"Firma (für Rechnung)",copy:"Nachricht kopieren",
  busWarn:"Der Filter „Parkplatz“ garantiert keinen Platz für einen Transporter. Vor der Buchung immer beim Vermieter bestätigen lassen.",
- err:"Bitte Adresse und Daten ausfüllen (Abreise nach Anreise).",
+ legalHead:"Datenschutz und Hinweise",legal1:"Die App hat keinen Server und speichert keine Daten außerhalb Ihres Browsers (letzte Einstellungen). Keine Cookies, keine Analyse.",legal2:"Zur Standortbestimmung wird die Baustellenadresse an OpenStreetMap (Nominatim) gesendet, einmal pro Suche, das Ergebnis wird lokal gespeichert. Die Adresse sollte keine personenbezogenen Daten enthalten.",legal3:"Die App liest keine Angebote von den Portalen aus. Sie erzeugt nur Links zu deren öffentlichen Suchseiten. Gebucht wird auf der Seite des Portals nach dessen Bedingungen.",err:"Bitte Adresse und Daten ausfüllen (Abreise nach Anreise).",
  n_booking_a:"Ganze Wohnungen und Häuser, Küche, Parkplatz, nach Entfernung sortiert",n_booking_h:"Ein Zimmer pro Person, Parkplatz, nach Entfernung sortiert",n_airbnb:"Ganze Unterkunft, Schlafzimmer, Bäder, Küche, Parkplatz, Umkreis",
- n_vrbo:"Ort, Daten, Personen – Schlafzimmer auf der Seite prüfen",n_holidu:"Vergleicht viele Portale – Filter prüfen",n_h2g:"Vergleichsportal – Daten und Personen setzen",n_fewo:"Großes deutsches FeWo-Portal",
+ n_vrbo:"Ort, Daten, Personen – Schlafzimmer auf der Seite prüfen",n_holidu:"Vergleicht viele Portale – Filter prüfen",n_h2g:"Vergleichsportal, Ort gesetzt – Daten und Personen ergänzen",n_fewo:"Großes deutsches FeWo-Portal",
  n_hrs:"Geschäftsreise-Hotels, Rechnung auf Firma",n_gmap_f:"Karte: Ferienwohnungen um die Baustelle",n_gmap_h:"Karte: Hotels und Gasthöfe um die Baustelle",n_gmap_p:"Karte: Pensionen und Gästezimmer",n_tour:"Tourismus-Seiten von Gemeinde/Region",
  n_mz:"Größtes Portal für Monteure",n_mmz:"Unterkünfte für Monteure",n_mzg:"Günstige Monteurunterkünfte"}
 };
@@ -258,6 +261,13 @@ try{const s=JSON.parse(localStorage.getItem("nf-last")||"null");if(s){if(s.addr)
 if(!$("addr").value)$("addr").value="Darmstädter Str. 1, 64673 Zwingenberg";
 
 async function locate(addr){
+  const ck="nf-geo:"+addr.toLowerCase();
+  try{const c=JSON.parse(localStorage.getItem(ck)||"null");if(c&&c.lat)return c}catch(e){}
+  const g=await locate2(addr);
+  if(g){try{localStorage.setItem(ck,JSON.stringify(g))}catch(e){}}
+  return g;
+}
+async function locate2(addr){
   try{
     const sample=await (window.claude&&window.claude.use?window.claude.use("sample"):null);
     if(!sample)return await osm(addr);
@@ -271,12 +281,12 @@ async function osm(addr){
     const r=await fetch("https://nominatim.openstreetmap.org/search?"+new URLSearchParams({q:addr,format:"json",limit:"1",countrycodes:"de",addressdetails:"1"}),{headers:{"Accept-Language":"de"}});
     if(!r.ok)return null;const j=await r.json();if(!j.length)return null;
     const x=j[0],ad=x.address||{};
-    return{lat:+(+x.lat).toFixed(4),lng:+(+x.lon).toFixed(4),place:[ad.postcode,ad.city||ad.town||ad.village||ad.municipality].filter(Boolean).join(" ")||addr};
+    return{lat:+(+x.lat).toFixed(4),lng:+(+x.lon).toFixed(4),place:[ad.postcode,ad.city||ad.town||ad.village||ad.municipality].filter(Boolean).join(" ")||addr,src:"osm"};
   }catch(e){return null}
 }
 function showLoc(){
   $("loc").hidden=false;
-  if(geo){const c=geo.lat+", "+geo.lng;$("loc-line").innerHTML=T[lang].locOk(esc(geo.place),c);$("coords").value=c}
+  if(geo){const c=geo.lat+", "+geo.lng;$("loc-line").innerHTML=T[lang].locOk(esc(geo.place),c)+(geo.src==="osm"?' · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>':"");$("coords").value=c}
   else{$("loc-line").textContent=t("locNone");$("coords-box").open=true}
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
@@ -297,6 +307,8 @@ $("addr").addEventListener("change",()=>{geo=null;$("coords").value=""});
 function bbox(){if(!geo)return null;const r=+$("radius").value;const dLat=r/111.32,dLng=r/(111.32*Math.cos(geo.lat*Math.PI/180));return{ne_lat:(geo.lat+dLat).toFixed(5),ne_lng:(geo.lng+dLng).toFixed(5),sw_lat:(geo.lat-dLat).toFixed(5),sw_lng:(geo.lng-dLng).toFixed(5)}}
 function qs(o){return Object.entries(o).filter(([,v])=>v!==undefined&&v!==null&&v!=="").map(([k,v])=>Array.isArray(v)?v.map(x=>encodeURIComponent(k)+"="+encodeURIComponent(x)).join("&"):encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&")}
 
+function townOf(a){const m=String(a).match(/(\d{5})\s+([^,]+)/);return m?(m[1]+" "+m[2].trim()):String(a).split(",").pop().trim()}
+function slug(x){const t=String(x).replace(/^\s*\d{5}\s*/,"").split(",").pop().replace(/\d{5}/g,"").trim();return t.toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 function portals(){
   const a=$("addr").value.trim(),f=$("from").value,to=$("to").value,w=st.workers,r=+$("radius").value;
   const near=geo?`${geo.lat},${geo.lng}`:a;
@@ -306,13 +318,13 @@ function portals(){
     return "https://www.booking.com/searchresults.html?"+qs(p)};
   const am=[];if($("kitchen").checked)am.push(8);if($("parking").checked)am.push(9);if($("wifi").checked)am.push(4);
   const ab=Object.assign({checkin:f,checkout:to,adults:w,min_bedrooms:st.bedrooms,min_bathrooms:st.baths,min_beds:$("singlebeds").checked?w:"",price_max:bud()?bud()*w:"","room_types[]":"Entire home/apt","amenities[]":am},geo?Object.assign({search_by_map:"true"},bbox()):{});
-  const town=geo?geo.place:a;
+  const town=geo?geo.place:townOf(a);
   return [
    {g:"apart",n:"Booking.com",k:"auto",note:"n_booking_a",url:bk([201,220,213],1,st.bedrooms>1?["entire_place_bedroom_count="+st.bedrooms]:[])},
    {g:"apart",n:"Airbnb",k:"auto",note:"n_airbnb",url:"https://www.airbnb.de/s/"+encodeURIComponent(a)+"/homes?"+qs(ab)},
-   {g:"apart",n:"FeWo-direkt (Vrbo)",k:"part",note:"n_vrbo",url:"https://www.fewo-direkt.de/search?"+qs({destination:a,startDate:f,endDate:to,adults:w,sort:"DISTANCE"})},
+   {g:"apart",n:"FeWo-direkt (Vrbo)",k:"part",note:"n_vrbo",url:"https://www.fewo-direkt.de/search?"+qs({destination:town,startDate:f,endDate:to,adults:w,sort:"DISTANCE"})},
    {g:"apart",n:"Holidu",k:"part",note:"n_holidu",url:"https://www.holidu.de/s/"+encodeURIComponent(town)+"?"+qs({checkin:f,checkout:to,adults:w})},
-   {g:"apart",n:"HomeToGo",k:"man",note:"n_h2g",url:"https://www.hometogo.de/"},
+   {g:"apart",n:"HomeToGo",k:"part",note:"n_h2g",url:"https://www.hometogo.de/"+slug(town)+"/"},
    {g:"apart",n:"Ferienwohnungen.de",k:"man",note:"n_fewo",url:"https://www.ferienwohnungen.de/"},
    {g:"hotel",n:"Booking.com",k:"auto",note:"n_booking_h",url:bk([204,216,208],w)},
    {g:"hotel",n:"HRS",k:"man",note:"n_hrs",url:"https://www.hrs.de/"},
@@ -380,4 +392,5 @@ applyLang();calc();
 render();$("msg").value=message();$("msg-card").hidden=false;
 })();
 </script>
+
 </body></html>
