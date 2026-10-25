@@ -1,0 +1,383 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="origin"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Nocleg-Finder Montage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow work column — form "Auftrag" card on top, results grouped by kind of stay below, host-message at the end */
+:root{
+  --bg:#EEF1F4; --panel:#FFFFFF; --ink:#16202A; --muted:#5A6774; --line:#D5DCE3;
+  --accent:#1E5AA0; --accent-ink:#FFFFFF; --amber:#B9770E; --amber-bg:#FBF1DE; --ok:#2E7D4F; --ok-bg:#E4F3EA;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#94A2B0; --line:#2B3744;
+  --accent:#5D9BE3; --accent-ink:#0C1520; --amber:#E2A847; --amber-bg:#30261A; --ok:#6CC592; --ok-bg:#16301F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161D; --panel:#18212B; --ink:#E6ECF2; --muted:#94A2B0; --line:#2B3744;
+  --accent:#5D9BE3; --accent-ink:#0C1520; --amber:#E2A847; --amber-bg:#30261A; --ok:#6CC592; --ok-bg:#16301F; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:20px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:2.1rem;line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+h1 small{display:block;font-family:var(--f-body);font-weight:400;font-size:.85rem;color:var(--muted);letter-spacing:0;margin-top:6px}
+h2{font-family:var(--f-display);font-weight:700;font-size:1.35rem;margin:0;letter-spacing:.02em;text-transform:uppercase}
+.lang{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.lang button{background:transparent;border:0;color:var(--muted);font:600 .8rem var(--f-mono);padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.full{grid-column:1/-1}
+@media (max-width:520px){.grid{grid-template-columns:minmax(0,1fr)}}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:.78rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],select,textarea{font:500 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:10px 11px;width:100%;min-width:0}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.steppers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:420px){.steppers{grid-template-columns:minmax(0,1fr)}}
+.step{display:flex;flex-direction:column;gap:5px}
+.step .row{display:flex;align-items:center;border:1px solid var(--line);border-radius:7px;background:var(--bg)}
+.step button{width:40px;height:42px;border:0;background:transparent;color:var(--accent);font:600 1.3rem var(--f-mono);cursor:pointer}
+.step output{flex:1;text-align:center;font:600 1.15rem var(--f-mono);font-variant-numeric:tabular-nums}
+.radius{display:flex;flex-direction:column;gap:6px}
+.radius .val{font:600 1.05rem var(--f-mono);color:var(--ink);text-transform:none;letter-spacing:0}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.ticks{display:flex;justify-content:space-between;font:.72rem var(--f-mono);color:var(--muted)}
+.budget{display:flex;flex-direction:column;gap:6px}
+.bwrap{display:flex;align-items:center;gap:10px}
+.bwrap input{max-width:120px;font:600 1.15rem var(--f-mono)!important}
+.unit{font:500 .9rem var(--f-body);text-transform:none;letter-spacing:0;color:var(--muted)}
+.bcalc{font:500 .85rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.bcalc b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:.9rem;cursor:pointer;user-select:none;background:var(--bg)}
+.chip input{accent-color:var(--accent);margin:0}
+.chip:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--panel))}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:13px 18px;font:700 1.1rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);font-size:.95rem;padding:9px 14px}
+.btn[disabled]{opacity:.6;cursor:wait}
+.summary{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 .85rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.summary b{color:var(--ink);font-weight:600}
+.loc{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:14px}
+.loc .line{font-size:.9rem;color:var(--muted)}
+.loc .line b{color:var(--ink)}
+.loc a{color:var(--accent)}
+details summary{cursor:pointer;color:var(--accent);font-size:.88rem}
+details .grid{margin-top:10px}
+.group{display:flex;flex-direction:column;gap:10px}
+.group-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.group-head span{font-size:.8rem;color:var(--muted)}
+.portal{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 14px;text-decoration:none;color:inherit}
+.portal:hover{border-color:var(--accent)}
+.portal .name{font-weight:600;font-size:1rem}
+.portal .note{grid-column:1/2;font-size:.82rem;color:var(--muted)}
+.portal .go{grid-row:1/3;grid-column:2;font:700 .95rem var(--f-display);letter-spacing:.06em;color:var(--accent);text-transform:uppercase;white-space:nowrap}
+.tag{display:inline-block;font:600 .68rem var(--f-mono);letter-spacing:.04em;padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:2px}
+.tag.auto{background:var(--ok-bg);color:var(--ok)}
+.tag.part{background:var(--amber-bg);color:var(--amber)}
+.hint{font-size:.85rem;color:var(--muted);margin:0}
+.warn{background:var(--amber-bg);border-radius:8px;padding:12px 14px;font-size:.88rem;color:var(--ink);border-left:4px solid var(--amber)}
+textarea{min-height:190px;font:400 .92rem/1.55 var(--f-body);resize:vertical}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;max-width:calc(100% - 32px);z-index:20}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+@media (prefers-reduced-motion:no-preference){.portal{transition:border-color .15s}}
+</style>
+<link rel="icon" href="icon.png"></head><body>
+
+<div class="wrap">
+  <header>
+    <h1>Nocleg-Finder<small data-t="sub"></small></h1>
+    <div class="lang" role="group" aria-label="Sprache / Język">
+      <button type="button" id="lang-pl" aria-pressed="true">PL</button>
+      <button type="button" id="lang-de" aria-pressed="false">DE</button>
+    </div>
+  </header>
+
+  <form class="card" id="form" autocomplete="off">
+    <h2 data-t="order"></h2>
+    <div class="grid">
+      <label class="f full"><span data-t="addr"></span>
+        <input type="text" id="addr" required>
+      </label>
+      <label class="f"><span data-t="from"></span><input type="date" id="from" required></label>
+      <label class="f"><span data-t="to"></span><input type="date" id="to" required></label>
+    </div>
+
+    <div class="steppers">
+      <div class="step"><label class="f" data-t="workers"></label><div class="row"><button type="button" data-s="workers" data-d="-1" aria-label="-">−</button><output id="o-workers">4</output><button type="button" data-s="workers" data-d="1" aria-label="+">+</button></div></div>
+      <div class="step"><label class="f" data-t="bedrooms"></label><div class="row"><button type="button" data-s="bedrooms" data-d="-1" aria-label="-">−</button><output id="o-bedrooms">2</output><button type="button" data-s="bedrooms" data-d="1" aria-label="+">+</button></div></div>
+      <div class="step"><label class="f" data-t="baths"></label><div class="row"><button type="button" data-s="baths" data-d="-1" aria-label="-">−</button><output id="o-baths">1</output><button type="button" data-s="baths" data-d="1" aria-label="+">+</button></div></div>
+    </div>
+
+    <div class="radius">
+      <label class="f" for="radius"><span data-t="radius"></span> <span class="val" id="radius-val">15 km</span></label>
+      <input type="range" id="radius" min="5" max="50" step="5" value="15">
+      <div class="ticks"><span>5</span><span>15</span><span>25</span><span>35</span><span>50 km</span></div>
+    </div>
+
+    <div class="budget">
+      <label class="f" for="budget"><span data-t="budget"></span>
+        <span class="bwrap"><input type="number" id="budget" min="10" max="300" step="5" value="40" inputmode="numeric"><span class="unit" data-t="budgetUnit"></span></span>
+      </label>
+      <div class="bcalc" id="bcalc"></div>
+    </div>
+
+    <div class="f" style="display:flex;flex-direction:column;gap:8px">
+      <span class="f" data-t="needs"></span>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="kitchen" checked><span data-t="kitchen"></span></label>
+        <label class="chip"><input type="checkbox" id="parking" checked><span data-t="parking"></span></label>
+        <label class="chip"><input type="checkbox" id="bus" checked><span data-t="bus"></span></label>
+        <label class="chip"><input type="checkbox" id="trailer"><span data-t="trailer"></span></label>
+        <label class="chip"><input type="checkbox" id="singlebeds" checked><span data-t="singlebeds"></span></label>
+        <label class="chip"><input type="checkbox" id="wifi" checked><span>WLAN</span></label>
+      </div>
+    </div>
+
+    <div class="f" style="display:flex;flex-direction:column;gap:8px">
+      <span class="f" data-t="kinds"></span>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="k-apart" checked><span data-t="k-apart"></span></label>
+        <label class="chip"><input type="checkbox" id="k-hotel" checked><span data-t="k-hotel"></span></label>
+        <label class="chip"><input type="checkbox" id="k-monteur"><span data-t="k-monteur"></span></label>
+        <label class="chip"><input type="checkbox" id="k-region" checked><span data-t="k-region"></span></label>
+      </div>
+    </div>
+
+    <button class="btn" type="submit" id="go"><span data-t="search"></span></button>
+
+    <div class="loc" id="loc" hidden>
+      <div class="line" id="loc-line"></div>
+      <details id="coords-box">
+        <summary data-t="coordsToggle"></summary>
+        <div class="grid">
+          <label class="f full"><span data-t="coordsLabel"></span><input type="text" id="coords" placeholder="49.7208, 8.6119"></label>
+        </div>
+      </details>
+    </div>
+  </form>
+
+  <section id="results" class="group" aria-live="polite" hidden>
+    <div class="summary" id="summary"></div>
+    <div id="groups" style="display:flex;flex-direction:column;gap:22px"></div>
+    <p class="hint" data-t="legend"></p>
+  </section>
+
+  <section class="card" id="msg-card" hidden>
+    <h2 data-t="msgHead"></h2>
+    <p class="hint" data-t="msgHint"></p>
+    <label class="f"><span data-t="company"></span><input type="text" id="company" value="OPASA GmbH"></label>
+    <textarea id="msg" aria-label="Nachricht"></textarea>
+    <div class="actions"><button class="btn ghost" type="button" id="copy-msg" data-t="copy"></button></div>
+    <div class="warn" data-t="busWarn"></div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const T={
+ pl:{sub:"Noclegi dla ekip w delegacji – blisko budowy",order:"Delegacja",addr:"Adres budowy",from:"Przyjazd",to:"Wyjazd",workers:"Pracownicy",bedrooms:"Sypialnie min.",baths:"Łazienki min.",radius:"Promień od budowy",budget:"Budżet na noc na montera",budgetUnit:"€ / noc / osoba",bcalc:(pn,tot,n)=>`Ekipa: <b>${pn} €</b> za noc · całość: <b>${tot} €</b> (${n})`,budgetNote:"limit ceny ustawiony",needs:"Wymagania",kitchen:"Kuchnia",parking:"Parking",bus:"Miejsce na busa",trailer:"Z przyczepą",singlebeds:"Osobne łóżka",kinds:"Rodzaj noclegu",
+ "k-apart":"Apartamenty / domy","k-hotel":"Hotele / pensjonaty","k-monteur":"Monteurzimmer","k-region":"Regionalne / mapa",search:"Szukaj noclegów",searching:"Ustalam lokalizację…",
+ coordsToggle:"Popraw lokalizację ręcznie",coordsLabel:"Współrzędne z Google Maps (szer., dł.)",
+ locOk:(p,c)=>`Lokalizacja (przybliżona): <b>${p}</b> · ${c} · <a href="${gm(c)}" target="_blank" rel="noopener">sprawdź na mapie</a>`,
+ locNone:"Bez współrzędnych: wyniki sortowane od najbliższych, ale promień nie jest ograniczony. Wpisz współrzędne poniżej, żeby go włączyć.",
+ nights:n=>n===1?"1 noc":(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?`${n} noce`:`${n} nocy`),
+ people:n=>`${n} os.`,
+ g_apart:"Apartamenty i domy",g_hotel:"Hotele i pensjonaty",g_monteur:"Monteurzimmer",g_region:"Regionalne i mapa",
+ g_apart_s:"spokój, osobne pokoje, własna kuchnia",g_hotel_s:"pokoje jednoosobowe, śniadanie",g_monteur_s:"tanio, nastawione na ekipy",g_region_s:"małe pensjonaty i kwatery z okolicy",
+ auto:"filtry ustawione",part:"częściowo",manual:"adres skopiowany",
+ open:"Otwórz",legend:"„filtry ustawione” – daty, osoby i wymagania są już w wyszukiwaniu. „częściowo” – sprawdź na stronie daty lub filtry. Limit ceny działa na Booking i Airbnb, na pozostałych stronach sortuj po cenie. Przy pozostałych adres budowy kopiuje się automatycznie – wystarczy go wkleić.",
+ copied:"Adres skopiowany – wklej go na stronie",copiedMsg:"Wiadomość skopiowana",copyFail:"Nie udało się skopiować – zaznacz tekst ręcznie",
+ msgHead:"Zapytanie do gospodarza",msgHint:"Gotowa wiadomość po niemiecku – wyślij przez portal przed rezerwacją.",company:"Firma (na fakturę)",copy:"Kopiuj wiadomość",
+ busWarn:"Filtr „parking” na portalach nie gwarantuje miejsca dla busa. Przed rezerwacją zawsze potwierdź to u gospodarza.",
+ err:"Uzupełnij adres i daty (wyjazd po przyjeździe).",
+ n_booking_a:"Całe mieszkania i domy, kuchnia, parking, sortowanie od budowy",n_booking_h:"Pokój dla każdego, parking, sortowanie od budowy",n_airbnb:"Cały obiekt, sypialnie, łazienki, kuchnia, parking, promień",
+ n_vrbo:"Miejsce, daty, osoby – sypialnie sprawdź na stronie",n_holidu:"Porównuje wiele portali – sprawdź filtry",n_h2g:"Porównywarka – ustaw daty i osoby",n_fewo:"Duży niemiecki portal FeWo",
+ n_hrs:"Hotele dla firm, faktury na firmę",n_gmap_f:"Mapa: Ferienwohnungen wokół budowy",n_gmap_h:"Mapa: hotele i Gasthöfe wokół budowy",n_gmap_p:"Mapa: Pensionen i Gästezimmer",n_tour:"Strony turystyczne gminy/regionu",
+ n_mz:"Największy portal dla ekip",n_mmz:"Kwatery dla monterów",n_mzg:"Tanie kwatery dla ekip"},
+ de:{sub:"Unterkünfte für Montageteams – nah an der Baustelle",order:"Montageeinsatz",addr:"Adresse der Baustelle",from:"Anreise",to:"Abreise",workers:"Mitarbeiter",bedrooms:"Schlafzimmer min.",baths:"Bäder min.",radius:"Umkreis um die Baustelle",budget:"Budget pro Nacht und Monteur",budgetUnit:"€ / Nacht / Person",bcalc:(pn,tot,n)=>`Team: <b>${pn} €</b> pro Nacht · gesamt: <b>${tot} €</b> (${n})`,budgetNote:"Preisgrenze gesetzt",needs:"Anforderungen",kitchen:"Küche",parking:"Parkplatz",bus:"Platz für Transporter",trailer:"Mit Anhänger",singlebeds:"Getrennte Betten",kinds:"Art der Unterkunft",
+ "k-apart":"Wohnungen / Häuser","k-hotel":"Hotels / Pensionen","k-monteur":"Monteurzimmer","k-region":"Regional / Karte",search:"Unterkünfte suchen",searching:"Ermittle Standort…",
+ coordsToggle:"Standort von Hand korrigieren",coordsLabel:"Koordinaten aus Google Maps (Breite, Länge)",
+ locOk:(p,c)=>`Standort (ungefähr): <b>${p}</b> · ${c} · <a href="${gm(c)}" target="_blank" rel="noopener">auf Karte prüfen</a>`,
+ locNone:"Ohne Koordinaten: Ergebnisse nach Entfernung sortiert, aber ohne Umkreis-Grenze. Koordinaten unten eintragen, um den Umkreis zu nutzen.",
+ nights:n=>n===1?"1 Nacht":`${n} Nächte`,people:n=>`${n} Pers.`,
+ g_apart:"Wohnungen und Häuser",g_hotel:"Hotels und Pensionen",g_monteur:"Monteurzimmer",g_region:"Regional und Karte",
+ g_apart_s:"Ruhe, eigene Zimmer, eigene Küche",g_hotel_s:"Einzelzimmer, Frühstück",g_monteur_s:"günstig, auf Teams ausgelegt",g_region_s:"kleine Pensionen und Zimmer vor Ort",
+ auto:"Filter gesetzt",part:"teilweise",manual:"Adresse kopiert",
+ open:"Öffnen",legend:"„Filter gesetzt“ – Daten, Personen und Anforderungen sind schon in der Suche. „teilweise“ – Daten oder Filter auf der Seite prüfen. Die Preisgrenze gilt bei Booking und Airbnb, auf den anderen Seiten nach Preis sortieren. Bei den übrigen wird die Adresse automatisch kopiert – nur noch einfügen.",
+ copied:"Adresse kopiert – auf der Seite einfügen",copiedMsg:"Nachricht kopiert",copyFail:"Kopieren nicht möglich – Text bitte von Hand markieren",
+ msgHead:"Anfrage an den Vermieter",msgHint:"Fertige Nachricht – vor der Buchung über das Portal senden.",company:"Firma (für Rechnung)",copy:"Nachricht kopieren",
+ busWarn:"Der Filter „Parkplatz“ garantiert keinen Platz für einen Transporter. Vor der Buchung immer beim Vermieter bestätigen lassen.",
+ err:"Bitte Adresse und Daten ausfüllen (Abreise nach Anreise).",
+ n_booking_a:"Ganze Wohnungen und Häuser, Küche, Parkplatz, nach Entfernung sortiert",n_booking_h:"Ein Zimmer pro Person, Parkplatz, nach Entfernung sortiert",n_airbnb:"Ganze Unterkunft, Schlafzimmer, Bäder, Küche, Parkplatz, Umkreis",
+ n_vrbo:"Ort, Daten, Personen – Schlafzimmer auf der Seite prüfen",n_holidu:"Vergleicht viele Portale – Filter prüfen",n_h2g:"Vergleichsportal – Daten und Personen setzen",n_fewo:"Großes deutsches FeWo-Portal",
+ n_hrs:"Geschäftsreise-Hotels, Rechnung auf Firma",n_gmap_f:"Karte: Ferienwohnungen um die Baustelle",n_gmap_h:"Karte: Hotels und Gasthöfe um die Baustelle",n_gmap_p:"Karte: Pensionen und Gästezimmer",n_tour:"Tourismus-Seiten von Gemeinde/Region",
+ n_mz:"Größtes Portal für Monteure",n_mmz:"Unterkünfte für Monteure",n_mzg:"Günstige Monteurunterkünfte"}
+};
+let lang="pl";
+try{const l=localStorage.getItem("nf-lang");if(l==="de"||l==="pl")lang=l}catch(e){}
+const $=id=>document.getElementById(id);
+const st={workers:4,bedrooms:2,baths:1};
+const lim={workers:[1,12],bedrooms:[1,8],baths:[1,4]};
+let geo=null; // {lat,lng,place}
+function gm(c){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(c)}
+function t(k){return T[lang][k]}
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-t]").forEach(el=>{const v=T[lang][el.dataset.t];if(typeof v==="string")el.textContent=v});
+  $("lang-pl").setAttribute("aria-pressed",lang==="pl");$("lang-de").setAttribute("aria-pressed",lang==="de");
+  if(!$("results").hidden)render();calc();
+}
+$("lang-pl").onclick=()=>{lang="pl";save();applyLang()};
+$("lang-de").onclick=()=>{lang="de";save();applyLang()};
+
+// dates: next Monday → Friday
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+(function(){const d=new Date();const add=((8-d.getDay())%7)||7;const mo=new Date(d.getFullYear(),d.getMonth(),d.getDate()+add);const fr=new Date(mo);fr.setDate(mo.getDate()+4);$("from").value=iso(mo);$("to").value=iso(fr)})();
+
+document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const k=b.dataset.s;st[k]=Math.min(lim[k][1],Math.max(lim[k][0],st[k]+ +b.dataset.d));$("o-"+k).textContent=st[k];if(k==="workers"&&st.bedrooms>st.workers){st.bedrooms=st.workers;$("o-bedrooms").textContent=st.bedrooms}refresh()});
+function bud(){const b=Math.max(0,parseInt($("budget").value,10)||0);return b}
+function calc(){const b=bud(),n=Math.max(0,nights()),w=st.workers;$("bcalc").innerHTML=b?T[lang].bcalc(b*w,b*w*n,T[lang].nights(n)):""}
+$("budget").addEventListener("input",()=>{calc();refresh()});
+$("radius").oninput=()=>{$("radius-val").textContent=$("radius").value+" km";refresh()};
+["kitchen","parking","bus","trailer","singlebeds","wifi","k-apart","k-hotel","k-monteur","k-region","from","to","company"].forEach(id=>$(id).addEventListener("change",refresh));
+$("company").addEventListener("input",()=>{if(!$("msg-card").hidden)$("msg").value=message()});
+$("coords").addEventListener("change",()=>{const c=parseCoords($("coords").value);if(c){geo={lat:c[0],lng:c[1],place:(geo&&geo.place)||$("addr").value};showLoc();refresh()}});
+function refresh(){calc();if(!$("results").hidden){render();$("msg").value=message()}save()}
+
+function parseCoords(s){const m=String(s).replace(/°/g,"").match(/(-?\d{1,2}(?:[.,]\d+)?)\s*[,; ]\s*(-?\d{1,3}(?:[.,]\d+)?)/);if(!m)return null;const a=parseFloat(m[1].replace(",",".")),b=parseFloat(m[2].replace(",","."));if(isNaN(a)||isNaN(b)||Math.abs(a)>90||Math.abs(b)>180)return null;return[a,b]}
+function nights(){return Math.round((new Date($("to").value)-new Date($("from").value))/864e5)}
+function fmtDate(s){const [y,m,d]=s.split("-");return `${d}.${m}.${y}`}
+
+function save(){try{localStorage.setItem("nf-lang",lang);localStorage.setItem("nf-last",JSON.stringify({addr:$("addr").value,st,radius:$("radius").value,budget:$("budget").value,company:$("company").value}))}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem("nf-last")||"null");if(s){if(s.addr)$("addr").value=s.addr;if(s.st)Object.assign(st,s.st);if(s.radius)$("radius").value=s.radius;if(s.company)$("company").value=s.company;if(s.budget)$("budget").value=s.budget;Object.keys(st).forEach(k=>$("o-"+k).textContent=st[k]);$("radius-val").textContent=$("radius").value+" km"}}catch(e){}
+if(!$("addr").value)$("addr").value="Darmstädter Str. 1, 64673 Zwingenberg";
+
+async function locate(addr){
+  try{
+    const sample=await (window.claude&&window.claude.use?window.claude.use("sample"):null);
+    if(!sample)return await osm(addr);
+    const r=await sample.json(`Return the approximate geographic coordinates of this address in Germany as JSON only, shape {"lat":number,"lng":number,"place":"PLZ Ort"}. If the street is unknown, use the town centre. Address: ${addr}`,{modelTier:"quick",cache:{}});
+    if(r&&typeof r.lat==="number"&&typeof r.lng==="number"&&Math.abs(r.lat-51)<6&&Math.abs(r.lng-10.5)<7)return{lat:+r.lat.toFixed(4),lng:+r.lng.toFixed(4),place:String(r.place||addr)};
+  }catch(e){}
+  return await osm(addr);
+}
+async function osm(addr){
+  try{
+    const r=await fetch("https://nominatim.openstreetmap.org/search?"+new URLSearchParams({q:addr,format:"json",limit:"1",countrycodes:"de",addressdetails:"1"}),{headers:{"Accept-Language":"de"}});
+    if(!r.ok)return null;const j=await r.json();if(!j.length)return null;
+    const x=j[0],ad=x.address||{};
+    return{lat:+(+x.lat).toFixed(4),lng:+(+x.lon).toFixed(4),place:[ad.postcode,ad.city||ad.town||ad.village||ad.municipality].filter(Boolean).join(" ")||addr};
+  }catch(e){return null}
+}
+function showLoc(){
+  $("loc").hidden=false;
+  if(geo){const c=geo.lat+", "+geo.lng;$("loc-line").innerHTML=T[lang].locOk(esc(geo.place),c);$("coords").value=c}
+  else{$("loc-line").textContent=t("locNone");$("coords-box").open=true}
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!$("addr").value.trim()||!$("from").value||!$("to").value||nights()<1){toast(t("err"));return}
+  const btn=$("go");btn.disabled=true;btn.querySelector("span").textContent=t("searching");
+  const manual=parseCoords($("coords").value);
+  geo=manual?{lat:manual[0],lng:manual[1],place:(geo&&geo.place)||$("addr").value.trim()}:await locate($("addr").value.trim());
+  btn.disabled=false;btn.querySelector("span").textContent=t("search");
+  showLoc();render();
+  $("msg").value=message();$("msg-card").hidden=false;save();
+  $("results").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+});
+$("addr").addEventListener("change",()=>{geo=null;$("coords").value=""});
+
+function bbox(){if(!geo)return null;const r=+$("radius").value;const dLat=r/111.32,dLng=r/(111.32*Math.cos(geo.lat*Math.PI/180));return{ne_lat:(geo.lat+dLat).toFixed(5),ne_lng:(geo.lng+dLng).toFixed(5),sw_lat:(geo.lat-dLat).toFixed(5),sw_lng:(geo.lng-dLng).toFixed(5)}}
+function qs(o){return Object.entries(o).filter(([,v])=>v!==undefined&&v!==null&&v!=="").map(([k,v])=>Array.isArray(v)?v.map(x=>encodeURIComponent(k)+"="+encodeURIComponent(x)).join("&"):encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&")}
+
+function portals(){
+  const a=$("addr").value.trim(),f=$("from").value,to=$("to").value,w=st.workers,r=+$("radius").value;
+  const near=geo?`${geo.lat},${geo.lng}`:a;
+  const bk=(types,rooms,extra)=>{const nf=types.map(x=>"ht_id="+x);if($("parking").checked)nf.push("hotelfacility=2");if(bud())nf.push("price=EUR-0-"+bud()*w+"-1");(extra||[]).forEach(x=>nf.push(x));
+    const p={ss:a,checkin:f,checkout:to,group_adults:w,no_rooms:rooms,group_children:0,order:"distance_from_search",nflt:nf.join(";"),lang:lang==="pl"?"pl":"de"};
+    if(geo)Object.assign(p,{dest_type:"latlong",latitude:geo.lat,longitude:geo.lng,radius:r});
+    return "https://www.booking.com/searchresults.html?"+qs(p)};
+  const am=[];if($("kitchen").checked)am.push(8);if($("parking").checked)am.push(9);if($("wifi").checked)am.push(4);
+  const ab=Object.assign({checkin:f,checkout:to,adults:w,min_bedrooms:st.bedrooms,min_bathrooms:st.baths,min_beds:$("singlebeds").checked?w:"",price_max:bud()?bud()*w:"","room_types[]":"Entire home/apt","amenities[]":am},geo?Object.assign({search_by_map:"true"},bbox()):{});
+  const town=geo?geo.place:a;
+  return [
+   {g:"apart",n:"Booking.com",k:"auto",note:"n_booking_a",url:bk([201,220,213],1,st.bedrooms>1?["entire_place_bedroom_count="+st.bedrooms]:[])},
+   {g:"apart",n:"Airbnb",k:"auto",note:"n_airbnb",url:"https://www.airbnb.de/s/"+encodeURIComponent(a)+"/homes?"+qs(ab)},
+   {g:"apart",n:"FeWo-direkt (Vrbo)",k:"part",note:"n_vrbo",url:"https://www.fewo-direkt.de/search?"+qs({destination:a,startDate:f,endDate:to,adults:w,sort:"DISTANCE"})},
+   {g:"apart",n:"Holidu",k:"part",note:"n_holidu",url:"https://www.holidu.de/s/"+encodeURIComponent(town)+"?"+qs({checkin:f,checkout:to,adults:w})},
+   {g:"apart",n:"HomeToGo",k:"man",note:"n_h2g",url:"https://www.hometogo.de/"},
+   {g:"apart",n:"Ferienwohnungen.de",k:"man",note:"n_fewo",url:"https://www.ferienwohnungen.de/"},
+   {g:"hotel",n:"Booking.com",k:"auto",note:"n_booking_h",url:bk([204,216,208],w)},
+   {g:"hotel",n:"HRS",k:"man",note:"n_hrs",url:"https://www.hrs.de/"},
+   {g:"hotel",n:"Google Maps",k:"auto",note:"n_gmap_h",url:"https://www.google.com/maps/search/"+encodeURIComponent("Hotel Gasthof in der Nähe von "+a)},
+   {g:"region",n:"Google Maps",k:"auto",note:"n_gmap_f",url:"https://www.google.com/maps/search/"+encodeURIComponent("Ferienwohnung in der Nähe von "+a)},
+   {g:"region",n:"Google Maps",k:"auto",note:"n_gmap_p",url:"https://www.google.com/maps/search/"+encodeURIComponent("Pension Gästezimmer in der Nähe von "+a)},
+   {g:"region",n:"Google",k:"auto",note:"n_tour",url:"https://www.google.com/search?q="+encodeURIComponent(`Ferienwohnung Gastgeberverzeichnis Tourismus ${town}`)},
+   {g:"monteur",n:"Monteurzimmer.de",k:"man",note:"n_mz",url:"https://www.monteurzimmer.de/"},
+   {g:"monteur",n:"Mein-Monteurzimmer.de",k:"man",note:"n_mmz",url:"https://www.mein-monteurzimmer.de/"},
+   {g:"monteur",n:"Monteurzimmerguenstig.de",k:"man",note:"n_mzg",url:"https://www.monteurzimmerguenstig.de/"}
+  ];
+}
+
+function render(){
+  const n=nights();
+  $("results").hidden=false;
+  $("summary").innerHTML=`<span><b>${esc(fmtDate($("from").value))} – ${esc(fmtDate($("to").value))}</b></span><span>${T[lang].nights(n)}</span><span>${T[lang].people(st.workers)}</span><span>≤ ${$("radius").value} km</span>${bud()?`<span>≤ <b>${bud()} €</b>/${lang==="pl"?"os./noc":"Pers./Nacht"}</span>`:""}`;
+  const on={apart:$("k-apart").checked,hotel:$("k-hotel").checked,monteur:$("k-monteur").checked,region:$("k-region").checked};
+  const box=$("groups");box.innerHTML="";
+  const list=portals();
+  ["apart","hotel","region","monteur"].filter(g=>on[g]).forEach(g=>{
+    const sec=document.createElement("div");sec.className="group";
+    sec.innerHTML=`<div class="group-head"><h2>${esc(t("g_"+g))}</h2><span>${esc(t("g_"+g+"_s"))}</span></div>`;
+    list.filter(p=>p.g===g).forEach(p=>{
+      const a=document.createElement("a");a.className="portal";a.href=p.url;a.target="_blank";a.rel="noopener";
+      const tag=p.k==="auto"?`<span class="tag auto">${esc(t("auto"))}</span>`:p.k==="part"?`<span class="tag part">${esc(t("part"))}</span>`:"";
+      const pn=(bud()&&(p.n==="Airbnb"||p.n==="Booking.com"))?" · "+t("budgetNote")+` (≤ ${bud()*st.workers} €/${lang==="pl"?"noc":"Nacht"})`:"";
+      a.innerHTML=`<span class="name">${esc(p.n)}${tag}</span><span class="note">${esc(t(p.note)+pn)}</span><span class="go">${esc(t("open"))} →</span>`;
+      if(p.k!=="auto")a.addEventListener("click",()=>copy($("addr").value.trim(),t("copied")));
+      sec.appendChild(a);
+    });
+    box.appendChild(sec);
+  });
+}
+
+function message(){
+  const w=st.workers,f=fmtDate($("from").value),to=fmtDate($("to").value),n=nights(),firm=$("company").value.trim();
+  const needs=[];
+  needs.push(`${st.bedrooms} ${st.bedrooms===1?"Schlafzimmer":"Schlafzimmer"}${$("singlebeds").checked?", möglichst getrennte Betten / Einzelbetten":""}`);
+  if($("kitchen").checked)needs.push("eine Küche zur Selbstverpflegung");
+  needs.push(`${st.baths} ${st.baths===1?"Bad":"Bäder"}`);
+  if($("wifi").checked)needs.push("WLAN");
+  if($("bus").checked)needs.push(`einen Parkplatz für unseren Transporter (Länge ca. 6 m, Höhe ca. 2,8 m)${$("trailer").checked?" mit Anhänger":""} direkt an der Unterkunft`);
+  else if($("parking").checked)needs.push("einen Parkplatz");
+  return `Guten Tag,
+
+wir sind ein Montageteam${firm?" der Firma "+firm:""} und arbeiten auf einer Baustelle in der Nähe (${$("addr").value.trim()}).
+
+Wir suchen vom ${f} bis ${to} (${n} ${n===1?"Nacht":"Nächte"}) eine Unterkunft für ${w} ${w===1?"Person":"Personen"}. Wichtig für uns sind:
+${needs.map(x=>"– "+x).join("\n")}
+
+Könnten Sie mir bitte bestätigen, dass das möglich ist – vor allem der Parkplatz für den Transporter?${firm?" Die Rechnung bitte auf "+firm+" ausstellen.":""}
+
+Vielen Dank und freundliche Grüße`;
+}
+$("copy-msg").onclick=()=>copy($("msg").value,t("copiedMsg"),$("msg"));
+
+function copy(text,okMsg,fallbackEl){
+  try{navigator.clipboard.writeText(text).then(()=>toast(okMsg),()=>{if(fallbackEl){fallbackEl.focus();fallbackEl.select()}toast(t("copyFail"))})}
+  catch(e){if(fallbackEl){fallbackEl.focus();fallbackEl.select()}toast(t("copyFail"))}
+}
+let tt;function toast(m){const el=$("toast");el.textContent=m;el.hidden=false;clearTimeout(tt);tt=setTimeout(()=>el.hidden=true,2600)}
+
+applyLang();calc();
+render();$("msg").value=message();$("msg-card").hidden=false;
+})();
+</script>
+</body></html>
